@@ -14,8 +14,8 @@
           </el-form-item>
           <el-form-item label="登陆身份" prop="identity">
             <el-radio-group v-model="loginForm.identity" prop="identity">
-              <el-radio label="求职者"></el-radio>
-              <el-radio label="面试官"></el-radio>
+              <el-radio label="user">求职者</el-radio>
+              <el-radio label="admin">面试官</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-form>
@@ -57,10 +57,18 @@
         submitForm(formName){
           this.$refs[formName].validate((valid)=>{
             if(valid){
+                this.$axios.post('/login/',JSON.stringify(this.loginForm)).then((res)=>{
+                    switch (res.data.loginMessage){
+                        case 'success':
+                            this.$router.push()
+                    }
+
+                })
               this.$message({
                 message:'验证成功',
                 type:'success'
               });
+
             }
             else {
               this.$message({
