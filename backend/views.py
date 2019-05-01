@@ -7,6 +7,7 @@ from backend.models import User, Admin, Interview_Authority
 # Create your views here.
 def login(request):
     obj = json.loads(request.body)
+    print(obj)
     name = obj['name']
     password = obj['password']
     interview_code = obj['interview_code']
@@ -14,7 +15,7 @@ def login(request):
     # ifUserOrAdmin = 0 # 是否有用户
     # ifPassWordCorrect = 0 #密码是否正确
     # ifAuthorized = 0 # 是否被授权
-    res={
+    res = {
         'loginMessage':''
     }
     try:

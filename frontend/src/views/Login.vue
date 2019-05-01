@@ -7,7 +7,7 @@
             <el-input v-model="loginForm.name" placeholder="请输入用户名" prefix-icon=""></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="password">
-            <el-input v-model="loginForm.password" placeholder="请输入密码" prefix-icon=""></el-input>
+            <el-input v-model="loginForm.password" placeholder="请输入密码" prefix-icon="" show-password></el-input>
           </el-form-item>
           <el-form-item label="面试码" prop="interview_code">
             <el-input v-model="loginForm.interview_code" placeholder="请输入面试码" prefix-icon=""></el-input>
@@ -57,10 +57,11 @@
         submitForm(formName){
           this.$refs[formName].validate((valid)=>{
             if(valid){
-                this.$axios.post('/login/',JSON.stringify(this.loginForm)).then((res)=>{
+                this.$axios.post('/api/login/',JSON.stringify(this.loginForm)).then((res)=>{
+                    console.log(res)
                     switch (res.data.loginMessage){
                         case 'success':
-                            this.$router.push()
+                            this.$router.push('/question')
                     }
 
                 })

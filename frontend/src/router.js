@@ -2,11 +2,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Login from './views/Login.vue'
+import  Question from './views/Question.vue'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
-  base: process.env.BASE_URL,
   routes: [
       {
           path:'/',
@@ -16,6 +15,11 @@ export default new Router({
           path:'/login',
           name:'login',
           component:Login,
+      },
+      {
+          path:'/question',
+          name:'question',
+          component:Question,
       }
     // {
     //   path: '/',

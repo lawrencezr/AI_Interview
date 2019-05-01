@@ -1,5 +1,5 @@
 <template>
-    
+    <div>面试界面</div>
 </template>
 
 <script>
