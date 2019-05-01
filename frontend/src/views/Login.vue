@@ -27,6 +27,8 @@
 </template>
 
 <script>
+    import {setCookie,getCookie} from "../assets/Cookie";
+
     export default {
       name: "Login",
       data(){
@@ -61,7 +63,28 @@
                     console.log(res)
                     switch (res.data.loginMessage){
                         case 'success':
-                            this.$router.push('/question')
+                            setCookie('name',this.loginForm.name)
+                            setCookie('identity',this.loginForm.identity)
+                            this.$router.push('/interview')
+                            break
+                        case 'no_user':
+                            this.$message({
+                                message:'用户名错误',
+                                type:'error'
+                            })
+                            break
+                        case 'wrong_password':
+                            this.$message({
+                                message:'密码错误',
+                                type:'error'
+                            })
+                            break
+                        case 'not_authorized':
+                            this.$message({
+                                message:'无权进入该面试场次',
+                                type:'error'
+                            })
+                            break
                     }
 
                 })
@@ -79,6 +102,15 @@
             }
           })
         }
+      },
+      mounted(){
+          if(getCookie('name')){
+              if(getCookie('identity')=='user')
+                  this.$router.push('/interview')
+              else if(getCookie('identity')=='admin')
+                  this.$router.push('/performance')
+          }
+
       }
 
     }
