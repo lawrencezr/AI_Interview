@@ -1,13 +1,13 @@
 <template>
   <div id="app">
-    <el-container>
-      <el-header>
-        AI 面试官
-      </el-header>
-      <el-main>
+    <!--<el-container>-->
+      <!--<el-header>-->
+        <!--AI 面试官-->
+      <!--</el-header>-->
+      <!--<el-main>-->
         <router-view/>
-      </el-main>
-    </el-container>
+      <!--</el-main>-->
+    <!--</el-container>-->
   </div>
 </template>
 <script>

@@ -1,6 +1,11 @@
 <template>
   <div>
-    <el-row align="middle">
+    <el-row>
+      <el-col :span="24">
+        <NavBar></NavBar>
+      </el-col>
+    </el-row>
+    <el-row>
       <el-col :span="8" :offset="8">
         <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-width="80px" label-position="left">
           <el-form-item label="用户名" prop="name">
@@ -28,9 +33,10 @@
 
 <script>
     import {setCookie,getCookie} from "../assets/Cookie";
-
+    import NavBar from '../components/NavBar.vue'
     export default {
       name: "Login",
+      components:{NavBar},
       data(){
           return{
             loginForm:{
@@ -117,6 +123,9 @@
 </script>
 
 <style scoped>
+  .el-row{
+    margin-bottom:40px;
+  }
   .login-button{
     width: 100%;
   }
