@@ -71,7 +71,10 @@
                         case 'success':
                             setCookie('name',this.loginForm.name)
                             setCookie('identity',this.loginForm.identity)
-                            this.$router.push('/interview')
+                            if(this.loginForm.identity=='user')
+                                this.$router.push('/interview')
+                            else if(this.loginForm.identity=='admin')
+                                this.$router.push('/performance')
                             break
                         case 'no_user':
                             this.$message({
@@ -123,9 +126,9 @@
 </script>
 
 <style scoped>
-  .el-row{
-    margin-bottom:40px;
-  }
+  /*.el-row{*/
+    /*margin-bottom:40px;*/
+  /*}*/
   .login-button{
     width: 100%;
   }

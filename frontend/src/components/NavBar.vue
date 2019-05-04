@@ -42,6 +42,7 @@
     background-color: #fff;
     border-bottom: 1px solid #DCDFE6;
     justify-content: space-between;
+    margin-bottom: 40px;
   }
   .el-menu.el-menu--horizontal{
       border-bottom: 0px;

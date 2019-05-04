@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import Login from './views/Login.vue'
 import Interview from './views/Interview.vue'
 import Performance from './views/Performance.vue'
+import InterviewEnd from './views/InterviewEnd.vue'
+
 Vue.use(Router)
 
 export default new Router({
@@ -27,6 +29,11 @@ export default new Router({
           path:'/performance',
           name:'performance',
           component:Performance
+      },
+      {
+          path:'/interview_end',
+          name:'interview_end',
+          component:InterviewEnd
       }
   ]
 })

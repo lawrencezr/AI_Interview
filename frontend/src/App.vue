@@ -1,13 +1,6 @@
 <template>
   <div id="app">
-    <!--<el-container>-->
-      <!--<el-header>-->
-        <!--AI 面试官-->
-      <!--</el-header>-->
-      <!--<el-main>-->
-        <router-view/>
-      <!--</el-main>-->
-    <!--</el-container>-->
+      <router-view/>
   </div>
 </template>
 <script>
