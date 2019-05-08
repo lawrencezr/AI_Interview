@@ -26,7 +26,7 @@
         </el-row>
         <el-row>
             <el-col :span="12" :offset="6">
-
+                <video class="camera-video" autoplay ref="video"></video>
             </el-col>
         </el-row>
         <el-row v-if="isPrepare">
@@ -45,6 +45,7 @@
 <script>
     import {getCookie} from "../assets/Cookie";
     import NavBar from "../components/NavBar"
+    import RecordRTC from 'recordrtc'
 
     export default {
         name: "Interview",
@@ -56,7 +57,9 @@
                 timeLeft:0,
                 timeSum:0,
                 isPrepare: true,
-                question: '1. 请介绍一下自己。（你将有60秒的时间进行思考，300秒的时间进行作答）'
+                question: '1. 请介绍一下自己。（你将有60秒的时间进行思考，300秒的时间进行作答）',
+                video: null,
+                recorder: null
             };
         },
         methods:{
@@ -77,6 +80,17 @@
                 this.$message({
                     message:'开始作答'
                 })
+                this.captureCamera((camera)=>{
+                    this.video.muted=true
+                    this.video.volume=0;
+                    this.video.srcObject=camera
+                    this.recorder = RecordRTC(camera,{
+                        type:'video',
+                        mimeType:'video/webm;codecs=h264'
+                    })
+                    this.recorder.startRecording()
+                    this.recorder.camera=camera
+                })
             },
             submitAnswer(){
                 this.$message({
@@ -87,16 +101,42 @@
                 this.timeSum = 60
                 if(this.activeStep++ > 2) this.activeStep = 0
                 console.log(this.activeStep)
+                this.recorder.stopRecording(this.stopRecordingCallback)
                 if(this.activeStep == 3)
                     this.$router.push('/interview_end')
+            },
+            captureCamera(callback){
+                navigator.mediaDevices.getUserMedia({audio:true,video:true}).then(function(camera){
+                    callback(camera)
+                }).catch((error)=>{
+                    this.$message.error('未找到视频设备')
+                })
+            },
+            stopRecordingCallback(){
+                this.video.src = this.video.srcObject = null
+                this.video.muted = false
+                this.video.volume = 1;
+                let recordedBlobs = this.recorder.getBlob()
+                let blob = new Blob(recordedBlobs,{type: 'video/mp4'})
+                let file = new File([blob],)
+                this.video.src = URL.createObjectURL((this.recorder.getBlob()))
+                window.open(URL.createObjectURL(this.recorder.getBlob()))
+                this.recorder.camera.stop()
+                this.recorder.destroy()
+                this.recorder = null
             }
         },
         created(){
             if(getCookie('identity') != 'user'){
                 this.$router.push('/login')
             }
+            this.captureCamera((camera)=>{
+                    this.video.muted=true
+                    this.video.volume=0;
+                    this.video.srcObject=camera})
         },
         mounted(){
+            this.video = document.querySelector('video')
             if(this.isPrepare){
                 this.timeLeft = 60
                 this.timeSum = 60
@@ -116,6 +156,10 @@
         margin-bottom: 10px;
     }
     .el-button{
+        width:100%;
+    }
+    .camera-video{
+        height:100%;
         width:100%;
     }
 </style>
