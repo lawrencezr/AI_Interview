@@ -42,10 +42,11 @@ class Performance(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='求职者成绩')
     interview_code = models.CharField(max_length=5)
     grade = models.IntegerField()
+    url = models.CharField(max_length=255)
+    admit = models.BooleanField()
 
 
-
-class Test_Video(models.Model):
+class Train_Video(models.Model):
     admin = models.ManyToManyField(Admin,related_name='面试官信息')
     interview_code = models.CharField(max_length=5)
     url = models.CharField(max_length=255)
