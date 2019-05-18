@@ -110,7 +110,7 @@ WSGI_APPLICATION = 'AI_Interview.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'interview',
+        'NAME': 'interview_db',
         'USER': 'root',
         'PASSWORD': 'zhengrui',
         'HOST': '127.0.0.1',

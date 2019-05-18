@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import json
 from django.core import serializers
-from backend.models import User, Admin, Interview_Authority
+from backend.models import User, Admin, Interview_Authority, Interview
 
 # Create your views here.
 def login(request):
@@ -21,10 +21,11 @@ def login(request):
     try:
         if identity == 'user':
             user = User.objects.filter(user_name=name)
-            userAuthority = Interview_Authority.objects.filter(name=name)
+            userAuthority = Interview_Authority.objects.filter(name=name).first()
             if user.count()>0:
                 if user[0].password == password:
-                    for ua in userAuthority:
+                    uaObj = userAuthority.interview.all()
+                    for ua in uaObj:
                         if ua.interview_code == interview_code:
                             res['loginMessage'] = 'success'
                             break
@@ -36,10 +37,11 @@ def login(request):
                 res['loginMessage']='no_user'
         elif identity == 'admin':
             admin = Admin.objects.filter(admin_name=name)
-            adminAuthority = Interview_Authority.objects.filter(name=name)
+            adminAuthority = Interview_Authority.objects.filter(name=name).first()
             if admin.count() > 0:
                 if admin[0].password == password:
-                    for ua in adminAuthority:
+                    uaObj = adminAuthority.interview.all()
+                    for ua in uaObj:
                         if ua.interview_code == interview_code:
                             res['loginMessage'] = 'success'
                             break
