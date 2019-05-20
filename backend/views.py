@@ -2,19 +2,17 @@ from django.shortcuts import render
 from django.http import HttpResponse
 import json
 from django.core import serializers
-from backend.models import User, Admin, Interview_Authority, Interview
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from backend.models import User, Admin, Interview_Authority, Interview, Question, Video, Performance, Train_Video
 
 # Create your views here.
 def login(request):
     obj = json.loads(request.body)
-    print(obj)
     name = obj['name']
     password = obj['password']
     interview_code = obj['interview_code']
     identity = obj['identity']
-    # ifUserOrAdmin = 0 # 是否有用户
-    # ifPassWordCorrect = 0 #密码是否正确
-    # ifAuthorized = 0 # 是否被授权
     res = {
         'loginMessage':''
     }
@@ -56,6 +54,45 @@ def login(request):
             'loginMessage':'error'
         }
     return HttpResponse(json.dumps(res),content_type='application/json')
+
+
+def linearRegression(interviewCode):
+    x=[]
+    y=[]
+    tmpX = [] #临时存放样本
+    tmpY = [] #临时存放标签
+    trainVideo = Train_Video.objects.filter(interview_code=interviewCode)
+    for tv in trainVideo:
+        tmpX.append(tv.beauty)
+        tmpX.append(tv.smile)
+        tmpY.append(tv.affinity)
+        x.append(tmpX)
+        y.append(tmpY)
+        tmpX=[]
+        tmpY=[]
+    lr = LinearRegression()
+    x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.25,random_state=1)
+    model = lr.fit(x_train,y_train)
+    x_pred = []
+    y_pred = []
+    vUser = []
+    video = Video.objects.filter(interview_code=interviewCode)
+    for v in video:
+        tmpX.append(v.beauty)
+        tmpX.append(v.smile)
+        vUser.append(v.user.user_name)
+        x_pred.append(tmpX)
+        tmpX=[]
+    y_pred = lr.predict(x_pred)
+    yLength = len(y_pred)
+    for i in range(yLength):
+        Performance.objects.filter(interview_code=interviewCode, user__user_name=vUser[i]).update(grade=y_pred[i])
+
+
+
+
+
+
 
 
 

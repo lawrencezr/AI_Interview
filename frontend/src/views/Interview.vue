@@ -36,7 +36,8 @@
         </el-row>
         <el-row v-if="!isPrepare">
             <el-col :span="12" :offset="6">
-                <el-button @click="submitAnswer()">结束作答</el-button>
+                <el-button v-if="activeStep<2" @click="submitAnswer()">结束作答</el-button>
+                <el-button v-if="activeStep==2" @click="submitAnswer()">提交答案</el-button>
             </el-col>
         </el-row>
     </div>
@@ -116,9 +117,9 @@
                 this.video.src = this.video.srcObject = null
                 this.video.muted = false
                 this.video.volume = 1;
-                let recordedBlobs = this.recorder.getBlob()
-                let blob = new Blob(recordedBlobs,{type: 'video/mp4'})
-                let file = new File([blob],)
+                //let recordedBlobs = this.recorder.getBlob()
+                //let blob = new Blob(recordedBlobs,{type: 'video/mp4'})
+                //let file = new File([blob],)
                 this.video.src = URL.createObjectURL((this.recorder.getBlob()))
                 window.open(URL.createObjectURL(this.recorder.getBlob()))
                 this.recorder.camera.stop()
@@ -146,7 +147,6 @@
                 this.timeSum = 300
             }
             setInterval(this.countDown,1000)
-
         }
     }
 </script>

@@ -5,13 +5,15 @@ from django.db import models
 class User(models.Model):
     user_name = models.CharField(max_length=20, primary_key=True)
     password = models.CharField(max_length=20)
-    actual_name = models.CharField(max_length=255)
-    telephone = models.CharField(max_length=20)
+    actual_name = models.CharField(max_length=255,null=True, blank=True)
+    telephone = models.CharField(max_length=20,null=True, blank=True)
+    email = models.CharField(max_length=50,null=True, blank=True)
 
 
 class Admin(models.Model):
     admin_name = models.CharField(max_length=20, primary_key=True)
     password = models.CharField(max_length=20)
+    actual_name = models.CharField(max_length=20,null=True, blank=True)
 
 
 class Interview(models.Model):
@@ -33,23 +35,23 @@ class Question(models.Model):
 class Video(models.Model):
     interview_code = models.CharField(max_length=5)
     url = models.CharField(max_length=255)
-    beauty = models.IntegerField(null=True, blank=True)
-    emotion = models.IntegerField(null=True, blank=True)
+    beauty = models.IntegerField(default=0)
+    smile = models.IntegerField(default=0)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='求职者信息')
 
 
 class Performance(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='求职者成绩')
     interview_code = models.CharField(max_length=5)
-    grade = models.IntegerField()
-    url = models.CharField(max_length=255)
-    admit = models.BooleanField()
+    grade = models.IntegerField(default=0)
+    url = models.CharField(max_length=255,null=True, blank=True)
+    admit = models.BooleanField(default=False)
 
 
 class Train_Video(models.Model):
     admin = models.ManyToManyField(Admin,related_name='面试官信息')
     interview_code = models.CharField(max_length=5)
     url = models.CharField(max_length=255)
-    beauty = models.IntegerField()
-    emotion = models.IntegerField()
-    affinity = models.IntegerField()
+    beauty = models.IntegerField(default=0)
+    smile = models.IntegerField(default=0)
+    affinity = models.IntegerField(default=0)

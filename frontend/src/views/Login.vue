@@ -69,8 +69,10 @@
                     console.log(res)
                     switch (res.data.loginMessage){
                         case 'success':
+                            // 种Cookie
                             setCookie('name',this.loginForm.name)
                             setCookie('identity',this.loginForm.identity)
+                            // 根据登录身份跳转相应的页面
                             if(this.loginForm.identity=='user')
                                 this.$router.push('/interview')
                             else if(this.loginForm.identity=='admin')
