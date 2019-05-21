@@ -72,6 +72,7 @@
                             // 种Cookie
                             setCookie('name',this.loginForm.name)
                             setCookie('identity',this.loginForm.identity)
+                            setCookie('interview_code',this.loginForm.interview_code)
                             // 根据登录身份跳转相应的页面
                             if(this.loginForm.identity=='user')
                                 this.$router.push('/interview')

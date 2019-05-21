@@ -4,6 +4,7 @@ import Login from './views/Login.vue'
 import Interview from './views/Interview.vue'
 import Performance from './views/Performance.vue'
 import InterviewEnd from './views/InterviewEnd.vue'
+import Train from './views/Train'
 
 Vue.use(Router)
 
@@ -34,6 +35,11 @@ export default new Router({
           path:'/interview_end',
           name:'interview_end',
           component:InterviewEnd
+      },
+      {
+          path:'/train',
+          name:'train',
+          component:Train
       }
   ]
 })

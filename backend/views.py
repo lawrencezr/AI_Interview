@@ -56,6 +56,40 @@ def login(request):
     return HttpResponse(json.dumps(res),content_type='application/json')
 
 
+def getQuestion(request):
+    code = request.GET['content']
+    try:
+        questions = serializers.serialize("json", Question.objects.filter(interview__interview_code=code))
+        res = {
+            "code":200,
+            "data": questions
+        }
+    except Exception as e:
+        res = {
+            "code":0,
+            "errMsg": e
+        }
+    return HttpResponse(json.dumps(res),content_type="application/json")
+
+
+def getAffifnity(request):
+    code = request.GET['content']
+    try:
+        performances = serializers.serialize("json", Performance.objects.filter(interview_code=code).order_by("-grade"))
+        print(performances)
+        res = {
+            "code":200,
+            "data": performances
+        }
+    except Exception as e:
+        res = {
+            "code": 0,
+            "errMsg": e
+        }
+    return HttpResponse(json.dumps(res), content_type="application/json")
+
+
+
 def linearRegression(interviewCode):
     x=[]
     y=[]
