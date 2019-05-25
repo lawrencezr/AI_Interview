@@ -36,7 +36,7 @@
         </el-row>
         <el-row v-if="!isPrepare">
             <el-col :span="12" :offset="6">
-                <el-button v-if="activeStep<2" @click="submitAnswer()">结束作答</el-button>
+                <el-button v-if="activeStep<2" @click="pauseAnswer()">结束作答</el-button>
                 <el-button v-if="activeStep==2" @click="submitAnswer()">提交答案</el-button>
             </el-col>
         </el-row>
@@ -60,7 +60,8 @@
                 isPrepare: true,
                 question: '1. 请介绍一下自己。（你将有60秒的时间进行思考，300秒的时间进行作答）',
                 video: null,
-                recorder: null
+                recorder: null,
+                isOver : false
             };
         },
         methods:{
@@ -70,7 +71,10 @@
                 if(this.timeLeft == 0 && this.timeSum == 60){
                     this.startAnswer()
                 }
-                else if(this.timeLeft == 0 && this.timeSum == 300){
+                else if(this.timeLeft == 0 && this.timeSum == 300 && this.activeStep<2){
+                    this.pauseAnswer()
+                }
+                else if(this.timeLeft == 0 && this.timeSum == 300 && this.activeStep==2){
                     this.submitAnswer()
                 }
             },
@@ -81,7 +85,8 @@
                 this.$message({
                     message:'开始作答'
                 })
-                this.captureCamera((camera)=>{
+                if(this.activeStep==0){
+                    this.captureCamera((camera)=>{
                     this.video.muted=true
                     this.video.volume=0;
                     this.video.srcObject=camera
@@ -92,19 +97,28 @@
                     this.recorder.startRecording()
                     this.recorder.camera=camera
                 })
+                }
+                else{
+                    this.recorder.resumeRecording()
+                }
+
             },
-            submitAnswer(){
-                this.$message({
-                    message:'答案已提交'
-                })
+            pauseAnswer(){
                 this.isPrepare = true
                 this.timeLeft = 60
                 this.timeSum = 60
-                if(this.activeStep++ > 2) this.activeStep = 0
+                this.recorder.pauseRecording()
+                this.activeStep++
+            },
+            submitAnswer(){
+                // this.isPrepare = true
+                // this.timeLeft = 60
+                // this.timeSum = 60
+                //if(this.activeStep > 2) this.activeStep = 0
                 console.log(this.activeStep)
+                this.isOver=true
                 this.recorder.stopRecording(this.stopRecordingCallback)
-                if(this.activeStep == 3)
-                    this.$router.push('/interview_end')
+
             },
             captureCamera(callback){
                 navigator.mediaDevices.getUserMedia({audio:true,video:true}).then(function(camera){
@@ -117,11 +131,45 @@
                 this.video.src = this.video.srcObject = null
                 this.video.muted = false
                 this.video.volume = 1;
-                //let recordedBlobs = this.recorder.getBlob()
-                //let blob = new Blob(recordedBlobs,{type: 'video/mp4'})
-                //let file = new File([blob],)
-                this.video.src = URL.createObjectURL((this.recorder.getBlob()))
-                window.open(URL.createObjectURL(this.recorder.getBlob()))
+                let recordedBlobs = this.recorder.getBlob()
+                var file = new File([recordedBlobs],getCookie('interview_code')+'-'+getCookie('name')+'.webm',{type:'video/webm'})
+                var formData = new FormData()
+                formData.append('video',file)
+                formData.append('name',getCookie('name'))
+                formData.append('interview_code',getCookie('interview_code'))
+                var request = new XMLHttpRequest()
+                var url = 'http://127.0.0.1:8000/api/uploadVideo/'
+                request.open("POST",url)
+                request.send(formData)
+                const loading =this.$loading({
+                    lock:true,
+                    text:'Uploading',
+                    spinner:'el-icon-loading',
+                    background:'rgba(0,0,0,0.7)'
+                })
+                let self = this
+                request.onreadystatechange=function () {
+                    var res = request.responseText
+                    if (request.readyState == 4 && request.status==200){
+                        res = JSON.parse(res)
+                        console.log(res)
+                        if(res['code']== 200){
+                            loading.close()
+                            self.$message({
+                                message:'视频已提交'
+                            })
+                            self.$router.push('/interview_end')
+                        }
+                        // else if(res.data.code == '0'){
+                        //     request.open("POST",url)
+                        //     request.send(formData)
+                        // }
+                    }
+                    // else{
+                    //     request.open("POST",url)
+                    //     request.send(formData)
+                    // }
+                }
                 this.recorder.camera.stop()
                 this.recorder.destroy()
                 this.recorder = null
@@ -146,7 +194,8 @@
                 this.timeLeft = 300
                 this.timeSum = 300
             }
-            setInterval(this.countDown,1000)
+            if(this.isOver == false)
+                setInterval(this.countDown,1000)
         }
     }
 </script>

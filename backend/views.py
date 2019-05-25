@@ -72,6 +72,26 @@ def getQuestion(request):
     return HttpResponse(json.dumps(res),content_type="application/json")
 
 
+def uploadVideo(request):
+    try:
+        file = request.FILES.get('video')
+        interCode = request.FILES.get('interview_code')
+        interName = request.FILES.get('name')
+        print(file.name)
+        print(file.size)
+        with open('AI_Interview/video/'+file.name,'wb') as f:
+            for line in file.chunks():
+                f.write(line)
+        res = {
+            "code":200
+        }
+    except Exception as e:
+        res = {
+            "code":0
+        }
+    return HttpResponse(json.dumps(res), content_type="application/json")
+
+
 def getAffifnity(request):
     code = request.GET['content']
     try:
