@@ -141,6 +141,7 @@
                 var url = 'http://127.0.0.1:8000/api/uploadVideo/'
                 request.open("POST",url)
                 request.send(formData)
+                console.log(request)
                 const loading =this.$loading({
                     lock:true,
                     text:'Uploading',

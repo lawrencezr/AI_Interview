@@ -8,6 +8,7 @@ class User(models.Model):
     actual_name = models.CharField(max_length=255,null=True, blank=True)
     telephone = models.CharField(max_length=20,null=True, blank=True)
     email = models.CharField(max_length=50,null=True, blank=True)
+    attend = models.BooleanField(default=False)
 
 
 class Admin(models.Model):
@@ -35,8 +36,8 @@ class Question(models.Model):
 class Video(models.Model):
     interview_code = models.CharField(max_length=5)
     url = models.CharField(max_length=255)
-    beauty = models.IntegerField(default=0)
-    smile = models.IntegerField(default=0)
+    beauty = models.IntegerField(default=0,null=True,blank=True)
+    smile = models.IntegerField(default=0,null=True,blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='求职者信息')
 
 

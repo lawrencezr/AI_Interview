@@ -12,7 +12,7 @@
             <el-main>
                 <el-row :gutter="60">
                     <el-col :span="12">
-                        <video class="p-video" autoplay controls src="../../../AI_Interview/video/101-jinguolin.mp4"></video>
+                        <video class="p-video" autoplay controls src="/AI_Interview/video/101-jinguolin.mp4"></video>
                     </el-col>
                     <el-col :span="12">
                         <el-row>
