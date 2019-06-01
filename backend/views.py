@@ -101,7 +101,7 @@ def uploadVideo(request):
         }
         t = threading.Thread(target=grabFrame,args=(1,file.name[:-5],baseUrl+file.name,interName,interCode))
         t.start()
-        Video.objects.update_or_create(user_id=interName, defaults={'interview_code':interCode, 'url':baseUrl+file.name[:-5]+'.mp4', 'user_id':interName})
+        Video.objects.update_or_create(user_id=interName, defaults={'interview_code':interCode, 'url':'http://localhost:8000/media/'+file.name[:-5]+'.mp4', 'user_id':interName})
     except Exception as e:
         res = {
             "code":0

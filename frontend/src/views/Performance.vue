@@ -3,8 +3,8 @@
         <NavBar></NavBar>
         <el-container>
             <el-aside>
-                <el-menu @select="fetchPerson" :default-active="0">
-                    <el-menu-item v-for="(p,index) in person" :index="index">
+                <el-menu @select="fetchPerson" default-active="0">
+                    <el-menu-item v-for="(p,index) in person" :index="index.toString()">
                         <span slot="title">{{p.name}}</span>
                     </el-menu-item>
                 </el-menu>
@@ -12,7 +12,8 @@
             <el-main>
                 <el-row :gutter="60">
                     <el-col :span="12">
-                        <video class="p-video" autoplay controls src="/AI_Interview/video/101-jinguolin.mp4"></video>
+                        <video id="pvideo" class="p-video" autoplay controls :src="currentPerson.url">
+                        </video>
                     </el-col>
                     <el-col :span="12">
                         <el-row>
@@ -33,24 +34,6 @@
                 </el-row>
             </el-main>
         </el-container>
-        <!--<el-row>-->
-            <!--<el-col :span="24">-->
-                <!--<el-tabs tab-position="left" style="height: 100%;">-->
-                    <!--<el-tab-pane v-for="p in person" :label="p.user_name">-->
-                        <!--<el-row>-->
-                            <!--<el-col :span="8" :offset="8">-->
-                                <!--<video autoplay controls src="/Users/lawrence/pyprojects/AI_Interview/AI_Interview/video/101-caokaiyuan.mp4"></video>-->
-                            <!--</el-col>-->
-                        <!--</el-row>-->
-                        <!--<el-row>-->
-                            <!--<el-col :span="8" :offset="8">-->
-                                <!--亲和力得分：{{p.grade}}-->
-                            <!--</el-col>-->
-                        <!--</el-row>-->
-                    <!--</el-tab-pane>-->
-                <!--</el-tabs>-->
-            <!--</el-col>-->
-        <!--</el-row>-->
     </div>
 </template>
 
@@ -106,11 +89,12 @@
                 })
             },
             fetchPerson(index){
-                this.currentPerson.id=this.person[index].id
-                this.currentPerson.name=this.person[index].name
-                this.currentPerson.url=encodeURI(this.person[index].url)
-                this.currentPerson.grade=this.person[index].grade
-                this.currentPerson.admit=this.person[index].admit
+                let i = parseInt(index)
+                this.currentPerson.id=this.person[i].id
+                this.currentPerson.name=this.person[i].name
+                this.currentPerson.url=this.person[i].url
+                this.currentPerson.grade=this.person[i].grade
+                this.currentPerson.admit=this.person[i].admit
             }
         },
         created(){
