@@ -21,6 +21,7 @@ class Interview(models.Model):
     interview_code = models.CharField(max_length=5,primary_key=True)
     company = models.CharField(max_length=20)
     job = models.CharField(max_length=20)
+    expire = models.BooleanField(default=False)
 
 
 class Interview_Authority(models.Model):
@@ -43,6 +44,7 @@ class Video(models.Model):
 
 class Performance(models.Model):
     user_name = models.CharField(max_length=20,null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='求职者',null=True,blank=True)
     interview_code = models.CharField(max_length=5)
     grade = models.IntegerField(default=0)
     url = models.CharField(max_length=255,null=True, blank=True)

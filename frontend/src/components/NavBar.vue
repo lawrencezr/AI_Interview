@@ -1,7 +1,7 @@
 <template>
     <el-container>
         <span class="logo">AI 面试官</span>
-        <el-menu mode="horizontal" v-if="name">
+        <el-menu mode="horizontal" v-if="name" router>
             <el-menu-item v-if="identity == 'admin'" index="/train">
                 样例打分
             </el-menu-item>
@@ -10,7 +10,7 @@
                 <el-menu-item index="/performance">
                     查看结果
                 </el-menu-item>
-                <el-menu-item index="2-2">
+                <el-menu-item index="/export">
                     导出名单
                 </el-menu-item>
             </el-submenu>
@@ -19,6 +19,8 @@
                 <el-menu-item index="3-1" @click="logout">退出登陆</el-menu-item>
             </el-submenu>
         </el-menu>
+
+
     </el-container>
 </template>
 
@@ -31,6 +33,17 @@
             return {
                 name:'',
                 identity:'',
+                json_fields:{
+                    "Name":"name",
+                },
+                json_data:[
+                ],
+                json_meta: [
+                    [{
+                        'key': 'charset',
+                        'value': 'utf-8'
+                    }]
+                ],
             }
         },
         methods: {
@@ -39,6 +52,7 @@
                 delCookie('identity')
                 this.$router.push('/')
             }
+
         },
         mounted(){
             let uname = getCookie('name')

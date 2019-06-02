@@ -256,7 +256,39 @@ def extractFeatures(framePath,user,interview_code):
     Video.objects.filter(interview_code=interview_code,user_id=user).update(beauty=beauty,smile=smile)
 
 
+def getTrain(request):
+    code = request.GET['content']
+    try:
+        trainVideo = serializers.serialize("json", Train_Video.objects.filter(interview_code=code))
+        print(trainVideo)
+        res = {
+            "code":200,
+            "data": trainVideo
+        }
+    except Exception as e:
+        res = {
+            "code": 0,
+            "errMsg": e
+        }
+    return HttpResponse(json.dumps(res), content_type="application/json")
 
+
+def setTrain(request):
+    obj = json.loads(request.body)
+    try:
+        for key in obj:
+            Train_Video.objects.filter(id=int(key[1:])).update(affinity=int(obj[key]))
+        tv = Train_Video.objects.filter(id=int(key[1:]))
+        t = threading.Thread(target=linearRegression(101))
+        t.start()
+        res = {
+            'code': 200
+        }
+    except Exception as e:
+        res = {
+            'code': 0
+        }
+    return HttpResponse(json.dumps(res), content_type='application/json')
 
 def linearRegression(interviewCode):
     x=[]
@@ -275,6 +307,7 @@ def linearRegression(interviewCode):
     lr = LinearRegression()
     x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=0.25,random_state=1)
     model = lr.fit(x_train,y_train)
+    print(model)
     x_pred = []
     y_pred = []
     vUser = []
@@ -286,6 +319,53 @@ def linearRegression(interviewCode):
         x_pred.append(tmpX)
         tmpX=[]
     y_pred = lr.predict(x_pred)
+    print(y_pred)
     yLength = len(y_pred)
     for i in range(yLength):
-        Performance.objects.filter(interview_code=interviewCode, user__user_name=vUser[i]).update(grade=y_pred[i])
+        Performance.objects.filter(interview_code=interviewCode,user__user_name=vUser[i]).update(grade=y_pred[i][0])
+
+
+def admit(request):
+    obj = json.loads(request.body)
+    try:
+        Performance.objects.filter(id=obj['id']).update(admit=obj['admit'])
+        if obj['admit']:
+            res={
+                'code':201
+            }
+        else:
+            res = {
+                'code': 200
+            }
+    except Exception as e:
+        res = {
+            'code': 0
+        }
+    return HttpResponse(json.dumps(res), content_type='application/json')
+
+
+def getAdmit(request):
+    code = request.GET['content']
+    data = []
+    try:
+        performances = Performance.objects.filter(interview_code=code,admit=True).order_by("-grade")
+        for p in performances:
+            data.append({
+                "fields":{
+                    "actual_name": p.user.actual_name + "",
+                    "telephone": p.user.telephone + "",
+                    "email": p.user.email + "",
+                }
+            })
+
+        res = {
+            "code":200,
+            "data": data
+        }
+        print(res)
+    except Exception as e:
+        res = {
+            "code": 0,
+            "errMsg": e
+        }
+    return HttpResponse(json.dumps(res), content_type="application/json")

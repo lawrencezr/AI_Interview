@@ -75,9 +75,9 @@
                             setCookie('interview_code',this.loginForm.interview_code)
                             // 根据登录身份跳转相应的页面
                             if(this.loginForm.identity=='user')
-                                this.$router.push('/interview')
+                                this.$router.push('/user_insturction')
                             else if(this.loginForm.identity=='admin')
-                                this.$router.push('/performance')
+                                this.$router.push('/admin_instruction')
                             break
                         case 'no_user':
                             this.$message({

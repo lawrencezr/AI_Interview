@@ -21,7 +21,7 @@
         </el-row>
         <el-row>
             <el-col :span="12" :offset="6">
-                {{question}}
+                {{question[activeStep]}}
             </el-col>
         </el-row>
         <el-row>
@@ -58,7 +58,10 @@
                 timeLeft:0,
                 timeSum:0,
                 isPrepare: true,
-                question: '1. 请介绍一下自己。（你将有60秒的时间进行思考，300秒的时间进行作答）',
+                question: ['1. 请介绍一下自己。（你将有60秒的时间进行思考，300秒的时间进行作答）',
+                    '2. 请介绍一下自己的最自豪的一件事情。（你将有60秒的时间进行思考，300秒的时间进行作答）',
+                    '3. 假如你和上级意见不一致，你会怎么做？（你将有60秒的时间进行思考，300秒的时间进行作答）'
+                ],
                 video: null,
                 recorder: null,
                 isOver : false

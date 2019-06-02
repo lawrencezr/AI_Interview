@@ -5,6 +5,9 @@ import Interview from './views/Interview.vue'
 import Performance from './views/Performance.vue'
 import InterviewEnd from './views/InterviewEnd.vue'
 import Train from './views/Train'
+import AdminInstruction from './views/AdminInstruction'
+import UserInstruction from './views/UserInstruction'
+import ExportExcel from './views/ExportExcel'
 
 Vue.use(Router)
 
@@ -40,6 +43,21 @@ export default new Router({
           path:'/train',
           name:'train',
           component:Train
-      }
+      },
+      {
+          path:'/admin_instruction',
+          name:'admin_instruction',
+          component:AdminInstruction
+      },
+      {
+          path:'/user_instruction',
+          name:'user_instruction',
+          component:UserInstruction
+      },
+      {
+          path:'/export',
+          name:'export',
+          component:ExportExcel
+      },
   ]
 })

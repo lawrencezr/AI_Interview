@@ -10,7 +10,7 @@
                 </el-menu>
             </el-aside>
             <el-main>
-                <el-row :gutter="60">
+                <el-row :gutter="60" v-if="isClick">
                     <el-col :span="12">
                         <video id="pvideo" class="p-video" autoplay controls :src="currentPerson.url">
                         </video>
@@ -24,10 +24,10 @@
                         </el-row>
                         <el-row>
                             <el-col :span="24">
-                                <el-button v-if="currentPerson.admit == false" type="success">合格</el-button>
+                                <el-button v-if="currentPerson.admit == false" type="success" @click="admit">合格</el-button>
                             </el-col>
                             <el-col :span="24">
-                                <el-button v-if="currentPerson.admit == true" type="danger">不合格</el-button>
+                                <el-button v-if="currentPerson.admit == true" type="danger" @click="admit">不合格</el-button>
                             </el-col>
                         </el-row>
                     </el-col>
@@ -49,11 +49,13 @@
               person:[],
               currentPerson:{
                   id:0,
+                  index:0,
                   name:'',
                   grade:0,
                   url:'',
                   admit:false
-              }
+              },
+              isClick: false,
           }
         },
         methods: {
@@ -90,11 +92,25 @@
             },
             fetchPerson(index){
                 let i = parseInt(index)
+                this.isClick=true
                 this.currentPerson.id=this.person[i].id
+                this.currentPerson.index=i
                 this.currentPerson.name=this.person[i].name
                 this.currentPerson.url=this.person[i].url
                 this.currentPerson.grade=this.person[i].grade
                 this.currentPerson.admit=this.person[i].admit
+            },
+            admit(){
+                this.currentPerson.admit = !this.currentPerson.admit
+                this.person[this.currentPerson.index].admit = !this.person[this.currentPerson.index].admit
+                this.$axios.post('/api/admit/',JSON.stringify(this.currentPerson)).then(res=>{
+                    if(res.data.code === 200){
+                        this.$message.success('取消录取！')
+                    }
+                    else if(res.data.code === 201){
+                        this.$message.success('已录取！')
+                    }
+                })
             }
         },
         created(){
